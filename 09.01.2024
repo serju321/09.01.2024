@@ -1,0 +1,395 @@
+#include <iostream>
+using namespace std;
+
+class Student {
+    string surname;
+    string name;
+    string middlename;
+    string adress;
+    string number;
+    int average_grade;
+    unsigned int practic = 0;
+    unsigned int homework = 0;
+    unsigned int exam = 0;
+    int* grade_practic = new int[practic];
+    int* grade_homework = new int[homework];
+    int* grade_exam = new int[exam];
+
+
+public:
+
+    Student() : Student("Serju", "Dan", "Yurievich", "Generala Petrova 20b", "102") {}
+
+    Student(string surname, string name, string middlname, string adress, string phonenumber)
+    {
+        SetSurname(surname);
+        SetName(name);
+        SetMiddlName(middlname);
+        SetAdress(adress);
+        SetPhone(phonenumber);
+
+    }
+
+    Student(string surname, string name, string middlname, string adress) : Student(surname, name, middlename, adress, "102") {}
+
+    ~Student()
+    {
+        if (grade_practic != nullptr)
+            delete[] grade_practic;
+        if (grade_homework != nullptr)
+            delete[] grade_homework;
+        if (grade_exam != nullptr)
+            delete[] grade_exam;
+    }
+
+    void Print()
+    {
+
+        cout << "Surname: " << surname << "\n";
+        cout << "Name: " << name << "\n";
+        cout << "Midlname: " << middlename << "\n";
+        cout << "Adress: " << adress << "\n";
+        cout << "Number: " << number << "\n";
+        PrintExam();
+        PrintPractic();
+        PrintHomeWork();
+        AverageGrade();
+    }
+
+    void  AverageGrade()
+    {
+        
+        for (int i = 0; i < homework; i++)
+        {
+            average_grade += grade_homework[i]/homework;
+        }
+        cout << average_grade << "\n";
+    }
+
+    void AddPractic(int addgrade)
+    {
+        int* temp = new int[practic + 1];
+        for (int i = 0; i < practic; i++)
+        {
+            temp[i] = grade_practic[i];
+        }
+
+        temp[practic] = addgrade;
+        practic++;
+        delete[]grade_practic;
+        grade_practic = temp;
+    }
+
+    void PrintPractic() const
+    {
+        cout << "Practic: ";
+        for (int i = 0; i < practic; i++)
+        {
+            cout << grade_practic[i] << ", ";
+        }
+        cout << "\n";
+    }
+
+    int GePracticRatesCount(unsigned int index) const
+    {
+        if (index < practic)
+        {
+            return grade_practic[index];
+        }
+    }
+
+    void AddHomeWork(int newcountry)
+    {
+        int* temp = new int[homework + 1];
+        for (int i = 0; i < homework; i++)
+        {
+            temp[i] = grade_homework[i];
+        }
+        temp[homework] = newcountry;
+        homework++;
+        delete[]grade_homework;
+        grade_homework = temp;
+    }
+
+    void PrintHomeWork() const
+    {
+        cout << "HomeWork: ";
+        for (int i = 0; i < homework; i++)
+        {
+            cout << grade_homework[i] << ", ";
+        }
+        cout << "\n";
+    }
+
+    int GetHomeWorkRatesCount(unsigned int index) const
+    {
+        if (index < homework)
+        {
+            return grade_homework[index];
+        }
+    }
+
+    void AddExam(int newcountry)
+    {
+        int* temp = new int[exam + 1];
+        for (int i = 0; i < exam; i++)
+        {
+            temp[i] = grade_exam[i];
+        }
+        temp[exam] = newcountry;
+        exam++;
+        delete[]grade_exam;
+        grade_exam = temp;
+    }
+
+    void PrintExam() const
+    {
+        cout << "Exam: ";
+        for (int i = 0; i < exam; i++)
+        {
+            cout << grade_exam[i] << ", ";
+        }
+        cout << "\n";
+    }
+
+    int GetExamRatesCount(unsigned int index) const
+    {
+        if (index < exam)
+        {
+            return grade_exam[index];
+        }
+    }
+
+    void SetSurname(string surname)
+    {
+        this->surname = surname;
+    }
+
+    string GetSurname() const
+    {
+        return surname;
+    }
+
+    void SetName(string name)
+    {
+        this->name = name;
+    }
+
+    string GetName() const
+    {
+        return name;
+    }
+
+    void SetMiddlName(string middlname)
+    {
+        this->middlename = middlname;
+    }
+
+    string GetMiddlName() const
+    {
+        return middlename;
+    }
+
+    void SetAdress(string adress)
+    {
+        this->adress = adress;
+    }
+
+    string GetAdress() const
+    {
+        return adress;
+    }
+
+    void SetPhone(string number)
+    {
+        this->number = number;
+    }
+
+    string GetPhone() const
+    {
+        return number;
+    }
+    void SetAverageGrade(int average_grade)
+    {
+        this->average_grade = average_grade;
+    }
+    int GetAverageGrade() const
+    {
+        return average_grade;
+    }
+};
+
+class Group {
+    Student** classmates = nullptr;
+    unsigned short countstudent = 0;
+    string group_name;
+    string specification;
+    unsigned short number_of_course;
+
+public:
+
+    Group()
+    {
+        SetGroupName("P26");
+        SetNumberOfCourse(2);
+        SetSpecification("Software Development");
+
+    }
+
+    ~Group()
+    {
+        for (int i = 0; i < countstudent; i++)
+        {
+            delete classmates[i];
+        }
+        delete[] classmates;
+    }
+
+    void Print() const
+    {
+        cout << GetGroupName() << "\n";
+        for (int i = 0; i < countstudent; i++)
+        {
+            classmates[i]->Print();
+
+        }
+    }
+
+    void AddStudent(const Student& new_student)
+    {
+        Student** temp = new Student * [countstudent + 1];
+        for (int i = 0; i < countstudent; i++)
+        {
+            temp[i] = classmates[i];
+        }
+        temp[countstudent] = new Student(new_student);
+        countstudent++;
+        delete[]classmates;
+        classmates = temp;
+    }
+
+    void WeanStudent(unsigned short index)
+    {
+        Student** temp = new Student * [countstudent - 1];
+        for (int i = 0, j = 0; i < countstudent; i++)
+        {
+            if (i != index)
+            {
+                temp[j++] = classmates[i];
+            }
+        }
+        delete classmates[index];
+        delete[] classmates;
+        countstudent--;
+        classmates = temp;
+    }
+
+    void Expel()
+    {
+        if (countstudent == 0) {
+            cout << "The group is empty.\n";
+            return;
+        }
+        int minGradeIndex = 0;
+        for (int i = 1; i < countstudent; i++)
+        {
+            if (classmates[i]->GetAverageGrade() < classmates[minGradeIndex]->GetAverageGrade()) {
+                minGradeIndex = i;
+            }
+        }
+        Student** temp = new Student * [countstudent - 1];
+        for (int i = 0, j = 0; i < countstudent; i++)
+        {
+            if (i != minGradeIndex) {
+                temp[j++] = classmates[i];
+            }
+        }
+        delete classmates[minGradeIndex];
+        delete[] classmates;
+        countstudent--;
+        classmates = temp;
+        cout << "The student with the lowest grade point average is dropped from the group.\n";
+    }
+
+    void SetCountOfStudent(int countstudent)
+    {
+        this->countstudent = countstudent;
+    }
+
+    int GetCountOfStudent() const
+    {
+        return countstudent;
+    }
+
+    void SetGroupName(string group_name)
+    {
+        this->group_name = group_name;
+    }
+
+    string GetGroupName() const
+    {
+        return group_name;
+    }
+
+    void SetSpecification(string specification)
+    {
+        this->specification = specification;
+    }
+
+    string GetSpecification() const
+    {
+        return specification;
+    }
+
+    void SetNumberOfCourse(int number_of_course)
+    {
+        this->number_of_course = number_of_course;
+    }
+
+    int GetNumberOfCourse() const
+    {
+        return number_of_course;
+    }
+
+};
+
+int main()
+{
+    Student serju;
+    serju.AddExam(11);
+    serju.AddExam(12);
+    serju.AddPractic(7);
+    serju.AddPractic(6);
+    serju.AddHomeWork(11);
+    serju.AddHomeWork(1);
+    serju.AddHomeWork(12);
+    serju.Print();
+
+    Student second;
+    second.AddExam(1);
+    second.AddExam(2);
+    second.AddPractic(7);
+    second.AddPractic(6);
+    second.AddHomeWork(1);
+    second.AddHomeWork(1);
+    second.AddHomeWork(12);
+    second.Print();
+
+    Student three;
+    three.AddExam(11);
+    three.AddExam(12);
+    three.AddPractic(7);
+    three.AddPractic(6);
+    three.AddHomeWork(11);
+    three.AddHomeWork(1);
+    three.AddHomeWork(12);
+    three.Print();
+
+    Group g;
+    g.AddStudent(serju);
+    g.AddStudent(second);
+    g.AddStudent(three);
+ /*   g.Expel();*/
+    g.Print();
+
+}
